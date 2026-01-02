@@ -13,6 +13,12 @@ const HttpsError = require('./models/http-error');
 app.use('/api/users', usersRoutes);
 app.use('/api/posts', postsRoutes);
 
+app.use((req,res,next) => {
+    const error = new HttpsError('Could not find this route.', 404);
+    throw error;
+});
+
+//Error handling middleware
 app.use((error, req, res, next) => {
     if (res.headerSent) {
         return next(error);
