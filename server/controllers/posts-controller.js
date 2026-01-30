@@ -1,9 +1,6 @@
-DUMMY_POSTS = [
-    { id: 'p1', title: 'First Post', content: 'This is the content of the first post.' },
-    { id: 'p2', title: 'Second Post', content: 'This is the content of the second post.' }
-];
 
 const HttpsError = require('../models/http-error');
+const {prisma} = require('../prisma');
 
 const getPosts = (req, res, next) => {
     console.log('Fetching all posts');
@@ -24,7 +21,7 @@ const getPostById = (req, res, next) => {
     res.json({ post });
 };
 
-const createdPost = (req, res, next) => {
+const createdPost = async (req, res, next) => {
     console.log('Creating a new post');
     const { title, content } = req.body;
 
@@ -32,13 +29,16 @@ const createdPost = (req, res, next) => {
         return res.status(422).json({ message: 'Invalid input, missing field' });
     }
 
-    const createdPost = {
-        id: Math.random().toString(),
-        title,
-        content
-    };
-
-    DUMMY_POSTS.push(createdPost);
+    try{
+        const newPost = await prisma.post.create({
+            data:{title,content}
+        });
+        res.status(201).json({ message: 'Post created', post: newPost });
+    }catch(err){
+        const error = new HttpsError('Creating post failed, please try again.',500);
+        return next(error);
+    }
+   
     res.status(201).json({ message: 'Post created', post: createdPost });
 };
 
