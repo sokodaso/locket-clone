@@ -40,6 +40,8 @@ const userSignup =  async (req, res, next) => {
 const userLogin = async (req, res, next) => {
     console.log('Logging in user');
     const {email, password} = req.body;
+
+    //Validation logic
     const identifiedUser = await prisma.user.findUnique({ where: { email: email } });
 
     if (!identifiedUser || identifiedUser.password !== password) {
@@ -47,8 +49,6 @@ const userLogin = async (req, res, next) => {
     }
     res.json({ message: 'User logged in' });
 };
-
-
 
 
 exports.userLogin = userLogin;
