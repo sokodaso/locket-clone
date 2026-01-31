@@ -14,18 +14,19 @@ app.use('/api/posts', postsRoutes);
 
 
 //Error handling middleware
-/*app.use((req,res,next) => {
+app.use((req,res,next) => {
     const error = new HttpsError('Could not find this route.', 404);
-    throw error;
-});*/
+    next(error);
+});
 
 
 app.use((error, req, res, next) => {
-    if (res.headerSent) {
+    if (res.headersSent) {
         return next(error);
     }
     res.status(error.code || 500);
     res.json({ message: error.message || 'An unknown error occurred!' });
+
 });
 
 //Starting the server

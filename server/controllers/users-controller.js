@@ -1,10 +1,10 @@
 const HttpError = require('../models/http-error');
-const {prisma} = require('../prisma');
+const prisma = require('../prisma');
 
 const userSignup =  async (req, res, next) => {
     console.log('Signing up user');
     const {name, email, password} = req.body;
-
+    
     //Validation logic 
     if (!name || !email || !password) {
         return next(new HttpError('Invalid input, missing field', 422));
@@ -33,6 +33,7 @@ const userSignup =  async (req, res, next) => {
         const error = new HttpError('Signing up failed, please try again.',500);
         return next(error);
     }
+    
     res.json({ message: 'User signed up' });
 };
 
