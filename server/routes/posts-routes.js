@@ -1,10 +1,10 @@
 const express = require('express');
-const { getPosts, deletePost, updatePost, createdPost } = require('../controllers/posts-controller');
+const { getPostsByUserId, deletePost, updatePost, createdPost } = require('../controllers/posts-controller');
 const router = express.Router();
 
 
-//GET api/posts
-router.get('/', getPosts);
+//GET api/posts/:uid
+router.get('/:uid', getPostsByUserId);
 
 //POST api/posts
 router.post('/', createdPost);
