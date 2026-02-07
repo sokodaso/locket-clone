@@ -1,5 +1,5 @@
 const express = require('express');
-const { getPostsByUserId, deletePost, updatePost, createdPost } = require('../controllers/posts-controller');
+const { getPostsByUserId, deletePost, updatePost, createPost } = require('../controllers/posts-controller');
 const router = express.Router();
 
 
@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/:uid', getPostsByUserId);
 
 //POST api/posts
-router.post('/', createdPost);
+router.post('/', createPost);
 
 //UPDATE api/posts/:pid
 router.patch('/:pid', updatePost);

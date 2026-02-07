@@ -2,7 +2,7 @@
 const HttpsError = require('../models/http-error');
 const prisma = require('../prisma');
 
-const createdPost = async (req, res, next) => {
+const createPost = async (req, res, next) => {
     console.log('Creating a new post');
     const { title, content, authorId } = req.body;
 
@@ -21,7 +21,7 @@ const createdPost = async (req, res, next) => {
         return next(error);
     }
    
-    res.status(201).json({ message: 'Post created', post: createdPost });
+    res.status(201).json({ message: 'Post created', post: newPost });
 };
 
 const getPostsByUserId = async (req, res, next) => {
@@ -43,39 +43,79 @@ const getPostsByUserId = async (req, res, next) => {
         const error = new HttpsError('Could not find post for the provided id.',404);
         return next(error);
     }
-    res.status(200).json({ message: 'Post fetched', posts });
+    res.status(200).json({ message: 'Post fetched', posts});
 };
 
-const updatePost = (req, res, next) => {
+const updatePost = async (req, res, next) => {
     console.log('Updating a post');
     const postId = req.params.pid;
     const { title, content } = req.body;
 
-    const postIndex = DUMMY_POSTS.findIndex(p => p.id === postId);
-    if (postIndex === -1) {
-        return res.status(404).json({ message: 'Post not found' });
+    let post;
+    try{
+        post = await prisma.post.findFirst({
+            where: { id: parseInt(postId) }
+        });
+    }catch(err){
+        console.error(err);
+        const error = new HttpsError('Something went wrong, could not update post.',500);
+        return next(error);
     }
 
-    if (title) DUMMY_POSTS[postIndex].title = title;
-    if (content) DUMMY_POSTS[postIndex].content = content;
+    if(!post){
+        const error = new HttpsError('Could not find post for the provided id.',404);
+        return next(error);
+    }
 
-    res.json({ message: 'Post updated', post: DUMMY_POSTS[postIndex] });
+    try{
+        post = await prisma.post.update({
+            where: { id: parseInt(postId) },
+            data: { title, content }
+        });
+    }catch(err){
+        console.error(err);
+        const error = new HttpsError('Something went wrong, could not update post.',500);
+        return next(error);
+    }
+
+    res.status(200).json({ message: 'Post updated', post });
 };
 
-const deletePost = (req, res, next) => {
+const deletePost = async (req, res, next) => {
     console.log('Deleting a post');
     const postId = req.params.pid;
 
-    const postIndex = DUMMY_POSTS.findIndex(p => p.id === postId);
-    if (postIndex === -1) {
-        return res.status(404).json({ message: 'Post not found' });
+    let post;
+    // Check if post exists
+    try{
+        post = await prisma.post.findFirst({
+            where: { id: parseInt(postId) }
+        });
+    }catch(err){
+        console.error(err);
+        const error = new HttpsError('Something went wrong, could not delete post.',500);
+        return next(error);
+    }
+    // If no post found
+    if(!post){
+        const error = new HttpsError('Could not find post for the provided id.',404);
+        return next(error);
+    } 
+    // Delete the post
+    try{
+        await prisma.post.delete({
+            where: { id: parseInt(postId) }
+        });
+    }catch(err){
+        console.error(err);
+        const error = new HttpsError('Something went wrong, could not delete post.',500);
+        return next(error);
     }
 
-    DUMMY_POSTS.splice(postIndex, 1);
-    res.json({ message: 'Post deleted' });
+    res.status(200).json({ message: 'Post deleted' });
 };
 
 exports.getPostsByUserId = getPostsByUserId;
-exports.createdPost = createdPost;
+exports.createPost = createPost;
 exports.updatePost = updatePost;
 exports.deletePost = deletePost;
