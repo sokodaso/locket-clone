@@ -1,2 +1,5 @@
-/server/dev.db 
-/server/prisma/dev.db
+**/node_modules/
+
+**/*.db
+
+server/.env
