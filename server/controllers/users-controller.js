@@ -1,6 +1,26 @@
 const HttpError = require('../models/http-error');
 const prisma = require('../prisma');
 
+const userProfile = async (req, res, next) => {
+    console.log('Retrieving user profile');
+    const uid = req.params.uid;
+
+    //Validation logic 
+    let user;
+    try{
+        user = await prisma.user.findUnique({ where: { id: parseInt(uid) } });
+    }catch(err){
+        const error = new HttpError('Retrieving user profile failed, please try again.', 500);
+        return next(error);
+    }
+
+    //User profile doesn't exist 
+    if (!user) {
+        return next(new HttpError('Could not find user for the provided ID.', 404));
+    }
+    res.json({user});
+};
+
 const userSignup =  async (req, res, next) => {
     console.log('Signing up user');
     const {name, email, password} = req.body;
@@ -50,6 +70,6 @@ const userLogin = async (req, res, next) => {
     res.json({ message: 'User logged in' });
 };
 
-
 exports.userLogin = userLogin;
 exports.userSignup = userSignup;
+exports.userProfile = userProfile;
