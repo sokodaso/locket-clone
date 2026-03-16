@@ -8,7 +8,7 @@ const userProfile = async (req, res, next) => {
     //Validation logic 
     let user;
     try{
-        user = await prisma.user.findUnique({ where: { id: parseInt(uid) } });
+        user = await prisma.user.findUnique({ where: { id: parseInt(uid) }, include: { _count: { select: { posts: true } } } });
     }catch(err){
         const error = new HttpError('Retrieving user profile failed, please try again.', 500);
         return next(error);
