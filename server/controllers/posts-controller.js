@@ -28,7 +28,23 @@ const getPostsByUserId = async (req, res, next) => {
     console.log('Fetching a single post');
     const userId = req.params.uid;
     
+    let user;
+    try {
+        user = await prisma.user.findUnique({ where: { id: parseInt(userId) } });
+
+    }catch(err){
+        console.error(err);
+        const error = new HttpsError('Something went wrong, could not fetch posts.',500);
+        return next(error);
+    }
+
+    if(!user){
+        const error = new HttpsError('Could not find user for the provided id.',404);
+        return next(error);
+    }
+
     let posts;
+    
     try{
         posts = await prisma.post.findMany({
             where: { authorId : parseInt(userId) }
@@ -38,9 +54,12 @@ const getPostsByUserId = async (req, res, next) => {
         const error = new HttpsError('Fetching post failed, please try again.',500);
         return next(error);
     }
-
+    console.log('Past here')
+    
     if(!posts || posts.length === 0){
+        console.log('About to fail here');
         const error = new HttpsError('Could not find post for the provided id.',404);
+        console.log('Failed here');
         return next(error);
     }
     res.status(200).json({ message: 'Post fetched', posts});
