@@ -5,7 +5,7 @@ const prisma = require('../prisma');
 const createPost = async (req, res, next) => {
     console.log('Creating a new post');
     const { title, content, authorId } = req.body;
-
+    
     if (!title || !content || !authorId) {
         return res.status(422).json({ message: 'Invalid input, missing field' });
     }
@@ -25,7 +25,7 @@ const createPost = async (req, res, next) => {
 };
 
 const getPostsByUserId = async (req, res, next) => {
-    console.log('Fetching a single post');
+    console.log('Fetching  posts');
     const userId = req.params.uid;
     
     let user;
@@ -54,12 +54,10 @@ const getPostsByUserId = async (req, res, next) => {
         const error = new HttpsError('Fetching post failed, please try again.',500);
         return next(error);
     }
-    console.log('Past here')
-    
-    if(!posts || posts.length === 0){
-        console.log('About to fail here');
+
+    if(!posts){
         const error = new HttpsError('Could not find post for the provided id.',404);
-        console.log('Failed here');
+        console.log('Past here');
         return next(error);
     }
     res.status(200).json({ message: 'Post fetched', posts});
