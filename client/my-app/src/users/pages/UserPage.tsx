@@ -1,10 +1,12 @@
 import UserItem from '../components/UserItem';
 import { useParams } from 'react-router';
 import {useEffect, useState} from 'react';
+import './UserPage.css';
 
-function User() {
+
+function UserPage() {
   const { userId } = useParams();
-  const [users, setUsers] = useState([]);
+  const [user, setUsers] = useState<any>();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -20,7 +22,6 @@ function User() {
 
         setUsers(data.user);
         setLoading(false);
-        
       } catch (error) {
         setLoading(false);
         console.error('Error fetching users:', error);
@@ -31,12 +32,14 @@ function User() {
   }, []); 
 
   return (
-    <div>
-      <h1>Users Page</h1>
+    <div className="users-page">
+      <div className = "users-page-header">
+        <h1>Users Page</h1>
+      </div>
       {loading && <p>Loading system data...</p>}
-      {!loading && users && <UserItem {...users} />}
+      {!loading && user && <UserItem {...user} posts={user._count.posts} />}
     </div>
   );
 } 
 
-export default User;
+export default UserPage;
