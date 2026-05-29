@@ -43,7 +43,7 @@ function UserPosts() {
 
             <Box sx={{display: 'flex',flexDirection: 'column',alignItems: 'center',gap:4, width:'100%'}}>
                 {loadedPosts.map(post => (
-                    <PostItem key={post.id} title={post.title} content={post.content} />
+                    <PostItem key={post.id} id={post.id} title={post.title} content={post.content} />
                 ))}
             </Box>
         </Box>

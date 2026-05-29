@@ -14,7 +14,7 @@ function App() {
           <Route path="/users/:userId/posts" element={<UserPosts/>} />
         </Route>
         <Route path="/posts/new" element={<NewPost/>} />
-        <Route path="/posts/:pid" element={<UpdatePost/>} />
+        <Route path="/posts/:pid/edit" element={<UpdatePost/>} />
       </Routes>
     </Router>
   );

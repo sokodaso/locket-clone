@@ -18,7 +18,7 @@ function NewPost() {
                 body: JSON.stringify({
                     title: title,
                     content: content, 
-                    authorId: '2'
+                    authorId: '3'
                 })
             });
         } catch (error) {
