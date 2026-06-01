@@ -4,6 +4,7 @@ import UserPosts from './posts/pages/UserPosts';
 import NewPost from './posts/pages/NewPost';
 import UpdatePost from './posts/pages/UpdatePost';
 import AppBar from './shared/AppBar';
+import DeletePost from './posts/pages/DeletePost';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         </Route>
         <Route path="/posts/new" element={<NewPost/>} />
         <Route path="/posts/:pid/edit" element={<UpdatePost/>} />
+        <Route path="/posts/:pid/delete" element={<DeletePost/>} />
       </Routes>
     </Router>
   );

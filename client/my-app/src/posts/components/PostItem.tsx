@@ -11,7 +11,7 @@ function PostItem({id, title,content}: any){
         <Card className="post-card" >
             <Box className="post-image-placeholder">
                 <Box className="kebab-container" sx={{position: 'absolute', right: '10px', zIndex: 10}}>
-                    <Kebab onEdit={() => navigate(`/posts/${id}/edit`,{ state: {title, content} })} onDelete={() => {}} />
+                    <Kebab onEdit={() => navigate(`/posts/${id}/edit`,{ state: {title, content} })} onDelete={() => navigate(`/posts/${id}/delete`)} />
                 </Box>
                 <Typography color="red">Image Placeholder</Typography>
             </Box>
