@@ -1,17 +1,19 @@
+import {useState} from "react";
+import Kebab from "../../shared/components/Kebab.tsx";
+import UpdateDialog from "../../shared/components/UpdateDialog.tsx";
+import DeleteDialog from "../../shared/components/DeleteDialog.tsx";
 import {Card, CardContent, Typography, Box} from "@mui/material";
-import Kebab from "../../shared/Kebab.tsx";
 import './PostItem.css';
-import {useNavigate} from "react-router";
 
-
-function PostItem({id, title,content}: any){
-    const navigate = useNavigate();
+function PostItem({id, title,content, onUpdateRefresh, onDeleteRefresh}: any){
+   const[isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
+   const[isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
     return (
         <Card className="post-card" >
             <Box className="post-image-placeholder">
                 <Box className="kebab-container" sx={{position: 'absolute', right: '10px', zIndex: 10}}>
-                    <Kebab onEdit={() => navigate(`/posts/${id}/edit`,{ state: {title, content} })} onDelete={() => navigate(`/posts/${id}/delete`)} />
+                    <Kebab onEdit={() => setIsUpdateDialogOpen(true)} onDelete={() => setIsDeleteDialogOpen(true)} />
                 </Box>
                 <Typography color="red">Image Placeholder</Typography>
             </Box>
@@ -23,6 +25,8 @@ function PostItem({id, title,content}: any){
                 {content}
             </Typography>
             </CardContent>
+            <UpdateDialog id={id} title={title} content={content} open={isUpdateDialogOpen} onClose={() => setIsUpdateDialogOpen(false)} onUpdateRefresh={onUpdateRefresh} />
+            <DeleteDialog id={id} title={title} content={content} open={isDeleteDialogOpen} onClose={() => setIsDeleteDialogOpen(false)} onDeleteRefresh={onDeleteRefresh}/> 
         </Card>
     );
 }

@@ -33,6 +33,15 @@ function UserPosts() {
         fetchPostItem();
     }, []); 
 
+    const handleUpdateRefresh = (id: number, updatedTitle: string, updatedContent: string) => {
+        setLoadedPosts(prevPosts => prevPosts.map(post => post.id === id ? {...post, title: updatedTitle, content: updatedContent} : post));
+    };
+
+    const handleDeleteRefresh = (id: number) => {
+        setLoadedPosts(prevPosts => prevPosts.filter(post=> post.id !== id));
+
+    };
+
     return (
         <Box className="posts-container">
             <Typography variant="h5" className="page-title">Posts</Typography>
@@ -43,7 +52,7 @@ function UserPosts() {
 
             <Box sx={{display: 'flex',flexDirection: 'column',alignItems: 'center',gap:4, width:'100%'}}>
                 {loadedPosts.map(post => (
-                    <PostItem key={post.id} id={post.id} title={post.title} content={post.content} />
+                    <PostItem key={post.id} id={post.id} title={post.title} content={post.content} onUpdateRefresh={handleUpdateRefresh} onDeleteRefresh={handleDeleteRefresh} />
                 ))}
             </Box>
         </Box>

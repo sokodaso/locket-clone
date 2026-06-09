@@ -1,24 +1,63 @@
-import {BrowserRouter as Router, Routes, Route } from 'react-router';
+import {BrowserRouter as Router, Routes, Route} from 'react-router';
+import { useState } from 'react';
 import User from './users/pages/UserPage';
 import UserPosts from './posts/pages/UserPosts';
 import NewPost from './posts/pages/NewPost';
-import UpdatePost from './posts/pages/UpdatePost';
-import AppBar from './shared/AppBar';
-import DeletePost from './posts/pages/DeletePost';
+import AppBar from './shared/components/AppBar';
+import Auth from './shared/pages/Auth';
+import AuthContext from './context/Auth-Context';
+import CustomNavigate from './shared/components/Navigate';
 
 function App() {
-  return (
-    <Router>
+  const [authState, setAuthState] = useState({
+    isLoggedIn: false,
+    userId: null
+  });
+
+  // Function to handle login and update auth state for token and userId when needed in the future
+  const login = (userId: number) => {
+    setAuthState({
+      isLoggedIn: true,
+      userId: userId
+    });
+  }
+
+  const logout = () => {
+    setAuthState({
+      isLoggedIn: false,
+      userId: null
+    });
+  };
+
+  let routes;
+
+  if (!authState.isLoggedIn) {
+    routes = (
+      <Routes>
+        <Route path="/login" element={<Auth />} />
+        <Route path="/signup" element={<Auth />} />
+        <Route path="*" element={<CustomNavigate to="/login" />} />
+      </Routes>
+    );
+  } else {
+    routes = (
       <Routes>
         <Route element={<AppBar />} >
-          <Route path="/users/:userId" element={< User />} />
-          <Route path="/users/:userId/posts" element={<UserPosts/>} />
+          <Route path="/users/:userId" element={<User />} />
+          <Route path="/users/:userId/posts" element={<UserPosts />} />
         </Route>
-        <Route path="/posts/new" element={<NewPost/>} />
-        <Route path="/posts/:pid/edit" element={<UpdatePost/>} />
-        <Route path="/posts/:pid/delete" element={<DeletePost/>} />
+        <Route path="/posts/new" element={<NewPost />} />
+        <Route path="*" element={<CustomNavigate to={`/users/${authState.userId}`} />} />
       </Routes>
-    </Router>
+    );
+  }
+
+  return (
+    <AuthContext.Provider value={{...authState, login, logout}}>
+      <Router>
+        {routes}
+      </Router>
+    </AuthContext.Provider>
   );
 }
 
