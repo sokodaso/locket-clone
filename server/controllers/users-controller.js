@@ -34,15 +34,15 @@ const userSignup =  async (req, res, next) => {
     let existingUser;
     try{
          existingUser = await prisma.user.findUnique({ where: { email: email } });
+
+        if(existingUser) {
+            return next(new HttpError('User exists already, please login instead.', 422));
+        }
     }catch(err){
         const error = new HttpError('Signing up failed, please try again.',500);
         return next(error);
     }
     
-    if(existingUser) {
-        return next(new HttpError('User exists already, please login instead.', 422));
-    }
-
     //Create new user
     let createdUser;
     try{
@@ -54,7 +54,7 @@ const userSignup =  async (req, res, next) => {
         return next(error);
     }
     
-    res.json({ message: 'User signed up' });
+    res.json({ message: 'User signed up' , userId: createdUser.id, email: createdUser.email});
 };
 
 const userLogin = async (req, res, next) => {
@@ -62,12 +62,24 @@ const userLogin = async (req, res, next) => {
     const {email, password} = req.body;
 
     //Validation logic
-    const identifiedUser = await prisma.user.findUnique({ where: { email: email } });
-
-    if (!identifiedUser || identifiedUser.password !== password) {
-        return next(new HttpError('Invalid credentials, could not log you in.', 401));
+    if (!email || !password) {
+        return next(new HttpError('Invalid input, missing field', 422));
     }
-    res.json({ message: 'User logged in' });
+    //Check if user exists
+    try{
+        const identifiedUser = await prisma.user.findUnique({ where: { email: email } });
+        
+        //User doesn't exist or password is incorrect
+        if (!identifiedUser || identifiedUser.password !== password) {
+            return next(new HttpError('Invalid credentials, could not log you in.', 401));
+        }
+
+        res.json({ message: 'User logged in' , userId: identifiedUser.id, email: identifiedUser.email});
+
+    }catch(err){
+        const error = new HttpError('Logging in failed, please try again.',500);
+        return next(error);
+    }
 };
 
 exports.userLogin = userLogin;
