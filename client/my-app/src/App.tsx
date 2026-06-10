@@ -11,7 +11,7 @@ import CustomNavigate from './shared/components/Navigate';
 function App() {
   const [authState, setAuthState] = useState({
     isLoggedIn: false,
-    userId: null
+    userId: null as number | null
   });
 
   // Function to handle login and update auth state for token and userId when needed in the future

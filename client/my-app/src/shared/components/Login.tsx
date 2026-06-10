@@ -1,11 +1,12 @@
 import {Box, Button, Card, Typography, TextField} from "@mui/material";
-import { useState} from "react";
-
+import { useContext, useState} from "react";
+import AuthContext from "../../context/Auth-Context";
 
 function Login() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const auth = useContext(AuthContext);   
     
       const handleLogin = async (e: any) => {
           e.preventDefault();
@@ -24,10 +25,11 @@ function Login() {
                 
                 const data = await response.json();
 
-                if(!response.ok){ 
+                if(response.ok){ 
+                    auth.login(data.userId);
+                } else {
                     throw new Error(data.message || 'Failed to log in');
                 }
-              console.log('Login form submitted');
 
           } catch (error) {
                console.error('Error during login:', error);
