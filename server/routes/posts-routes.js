@@ -1,7 +1,9 @@
 const express = require('express');
 const { getPostsByUserId, deletePost, updatePost, createPost } = require('../controllers/posts-controller');
 const router = express.Router();
+const checkAuth = require('../middleware/check-auth');
 
+router.use(checkAuth);
 
 //GET api/posts/:uid
 router.get('/:uid', getPostsByUserId);

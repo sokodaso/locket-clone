@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+require('dotenv').config();
 
 app.use(express.json());
 app.use(cors());
@@ -13,7 +14,6 @@ const HttpsError = require('./models/http-error');
 //Using routes
 app.use('/api/users', usersRoutes);
 app.use('/api/posts', postsRoutes);
-
 
 //Error handling middleware
 app.use((req,res,next) => {
