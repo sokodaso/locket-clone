@@ -1,10 +1,12 @@
 import { Box, Button, Card, TextField,Dialog, DialogActions, DialogTitle,DialogContent} from "@mui/material";
-import { useState} from "react";
+import { useState, useContext} from "react";
+import AuthContext from "../../context/Auth-Context";
 
 function UpdateDialog({id, title, content, open, onClose, onUpdateRefresh}: any) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [updatedTitle, setTitle] = useState(title);
     const [updatedContent, setContent] = useState(content);
+    const authState = useContext(AuthContext);
 
       const handleUpdatePost = async (e: any) => {
           e.preventDefault();
@@ -13,7 +15,8 @@ function UpdateDialog({id, title, content, open, onClose, onUpdateRefresh}: any)
               const response = await fetch(`http://localhost:3000/api/posts/${id}`, {
                   method: 'PATCH',
                   headers: {
-                      'Content-Type': 'application/json'
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${authState.token}`
                   },
                   body: JSON.stringify({
                       title: updatedTitle,

@@ -1,10 +1,11 @@
 import {Box, Button, Card, Typography, Dialog, DialogActions, DialogTitle,DialogContent} from "@mui/material";
-import { useState} from "react";
+import { useState,useContext} from "react";
+import AuthContext from "../../context/Auth-Context";
 
 function DeleteDialog({id, open, onClose, onDeleteRefresh}: any) {
     const [isSubmitting, setIsSubmitting] = useState(false);
-    
-    console.log('id in delete dialog:', id);
+    const authState = useContext(AuthContext);
+
 
       const handleDeletePost = async (e: any) => {
           e.preventDefault();
@@ -12,6 +13,9 @@ function DeleteDialog({id, open, onClose, onDeleteRefresh}: any) {
           try{
               const response = await fetch(`http://localhost:3000/api/posts/${id}`, {
                   method: 'DELETE',
+                  headers: {
+                      'Authorization': `Bearer ${authState.token}`
+                  }
               });
                 if(response.ok){
                     onDeleteRefresh(id);

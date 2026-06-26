@@ -10,28 +10,28 @@ import CustomNavigate from './shared/components/Navigate';
 
 function App() {
   const [authState, setAuthState] = useState({
-    isLoggedIn: false,
-    userId: null as number | null
+    userId: null as number | null,
+    token: null as string | null
   });
 
   // Function to handle login and update auth state for token and userId when needed in the future
-  const login = (userId: number) => {
+  const login = (userId: number, token: string) => {
     setAuthState({
-      isLoggedIn: true,
-      userId: userId
+      userId: userId,
+      token: token
     });
   }
 
   const logout = () => {
     setAuthState({
-      isLoggedIn: false,
-      userId: null
+      userId: null,
+      token: null
     });
   };
 
   let routes;
 
-  if (!authState.isLoggedIn) {
+  if (authState.token === null) {
     routes = (
       <Routes>
         <Route path="/login" element={<Auth />} />

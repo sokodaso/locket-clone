@@ -3,6 +3,9 @@ import { useState} from "react";
 
 function SignUp() {
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     
       const handleSignUp = async (e: any) => {
           e.preventDefault();
@@ -14,9 +17,9 @@ function SignUp() {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        username: 'username',
-                        email: 'email',
-                        password: 'password'
+                        name: username,
+                        email: email,
+                        password: password
                     })
                 });
                 const data = await response.json();
@@ -38,9 +41,9 @@ function SignUp() {
                 <Typography variant="h5" fontWeight="bold" gutterBottom>
                     Sign Up
                 </Typography>
-                    <TextField id="Name" label="Name" variant="outlined" fullWidth margin="normal" type="text" />
-                    <TextField id="email" label="Email" variant="outlined" fullWidth margin="normal" type="email" />
-                    <TextField id="password" label="Password" variant="outlined" fullWidth margin="normal" type="password" />
+                    <TextField id="Name" label="Name" variant="outlined" fullWidth margin="normal" type="text" onChange={(e) => setUsername(e.target.value)} />
+                    <TextField id="email" label="Email" variant="outlined" fullWidth margin="normal" type="email" onChange={(e) => setEmail(e.target.value)} />
+                    <TextField id="password" label="Password" variant="outlined" fullWidth margin="normal" type="password" onChange={(e) => setPassword(e.target.value)} />
                 <Button variant="contained" color="primary" disabled={isSubmitting} type="submit">
                     {isSubmitting ? 'Signing Up...' : 'Sign Up'}
                 </Button>

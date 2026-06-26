@@ -1,11 +1,13 @@
 import UserItem from '../components/UserItem';
 import { useParams } from 'react-router';
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useContext} from 'react';
 import './UserPage.css';
+import AuthContext from '../../context/Auth-Context';
 
 
 function UserPage() {
   const { userId } = useParams();
+  const authState = useContext(AuthContext);
   const [user, setUsers] = useState<any>();
   const [loading, setLoading] = useState(false);
 
@@ -13,7 +15,11 @@ function UserPage() {
     const fetchUsers = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:3000/api/users/${userId}`);
+        const response = await fetch(`http://localhost:3000/api/users/${userId}`, {
+          headers: {
+            'Authorization': `Bearer ${authState.token}`
+          }
+        });
         const data = await response.json();
 
         if(!response.ok) {

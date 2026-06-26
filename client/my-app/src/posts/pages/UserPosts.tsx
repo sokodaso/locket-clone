@@ -1,7 +1,8 @@
 import PostItem from '../components/PostItem.tsx'
 import {Box, Typography} from "@mui/material";
 import { useParams } from 'react-router';
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useContext} from 'react';
+import AuthContext from "../../context/Auth-Context";
 
 interface Post{
     id: number;
@@ -13,12 +14,17 @@ function UserPosts() {
     const { userId } = useParams();
     const [loadedPosts, setLoadedPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(false);
+    const authState = useContext(AuthContext);
 
     useEffect(() => {
         const fetchPostItem = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`http://localhost:3000/api/posts/${userId}`);
+                const response = await fetch(`http://localhost:3000/api/posts/${userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${authState.token}`
+                    }
+                });
                 const data = await response.json();
                 if(response.ok){
                     setLoadedPosts(data.posts);

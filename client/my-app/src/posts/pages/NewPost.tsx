@@ -1,10 +1,12 @@
 import {Box, Typography, Button, TextField,Card} from "@mui/material";
-import {useState} from 'react';
+import {useState, useContext} from 'react';
+import AuthContext from "../../context/Auth-Context";
 
 function NewPost() {
    const [isSubmitting, setIsSubmitting] = useState(false);
    const [title, setTitle] = useState('');
    const [content, setContent] = useState('');
+    const authState = useContext(AuthContext);
 
     const handleCreatePost = async (e: any) => {
         e.preventDefault();
@@ -13,12 +15,13 @@ function NewPost() {
             await fetch(`http://localhost:3000/api/posts`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authState.token}`
                 },
                 body: JSON.stringify({
                     title: title,
                     content: content, 
-                    authorId: '3'
+                    authorId: authState.userId
                 })
             });
         } catch (error) {

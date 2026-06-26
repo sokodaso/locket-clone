@@ -26,7 +26,7 @@ function Login() {
                 const data = await response.json();
 
                 if(response.ok){ 
-                    auth.login(data.userId);
+                    auth.login(data.userId, data.token); // Update auth state with userId and token
                 } else {
                     throw new Error(data.message || 'Failed to log in');
                 }
