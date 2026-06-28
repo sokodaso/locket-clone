@@ -12,7 +12,7 @@ const checkAuth = (req, res, next) => {
     if(!token){
         return next(new HttpError('Authentication failed', 401));
     }
-
+    
     //Verify token
     try{
         const decodedToken = jwt.verify(token, process.env.JWT);

@@ -27,7 +27,6 @@ const userSignup =  async (req, res, next) => {
     console.log('Signing up user');
     const {name, email, password} = req.body;
     
-    console.log('I am here');
     //Validation logic 
     if (!name || !email || !password) {
         return next(new HttpError('Invalid input, missing field', 422));
