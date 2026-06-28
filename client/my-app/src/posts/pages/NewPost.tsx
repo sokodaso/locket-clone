@@ -20,8 +20,7 @@ function NewPost() {
                 },
                 body: JSON.stringify({
                     title: title,
-                    content: content, 
-                    authorId: authState.userId
+                    content: content
                 })
             });
         } catch (error) {

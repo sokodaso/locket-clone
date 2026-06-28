@@ -1,5 +1,5 @@
 import {BrowserRouter as Router, Routes, Route} from 'react-router';
-import { useState } from 'react';
+import { useState, useCallback, useEffect} from 'react';
 import User from './users/pages/UserPage';
 import UserPosts from './posts/pages/UserPosts';
 import NewPost from './posts/pages/NewPost';
@@ -15,19 +15,31 @@ function App() {
   });
 
   // Function to handle login and update auth state for token and userId when needed in the future
-  const login = (userId: number, token: string) => {
+  const login = useCallback((userId: number, token: string) => {
     setAuthState({
       userId: userId,
       token: token
     });
-  }
+
+    // Store the stringified object in browser
+    localStorage.setItem('authState', JSON.stringify({ userId, token }));
+  }, []);
 
   const logout = () => {
     setAuthState({
       userId: null,
       token: null
     });
+    localStorage.removeItem('authState');
   };
+
+  useEffect(() => {
+    const storedAuthState = localStorage.getItem('authState');
+    if (storedAuthState) {
+      const parsedAuthState = JSON.parse(storedAuthState);
+      setAuthState(parsedAuthState);
+    }
+  }, [login]);
 
   let routes;
 
