@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const userProfile = async (req, res, next) => {
     console.log('Retrieving user profile');
     const uid = req.params.uid;
-
+   
     //Validation logic 
     let user;
     try{

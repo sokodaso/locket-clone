@@ -1,21 +1,26 @@
 const HttpsError = require('../models/http-error');
 const prisma = require('../prisma');
+const {deleteFile} = require('../middleware/file-upload');
 
 const createPost = async (req, res, next) => {
     console.log('Creating a new post');
-    const { title, content } = req.body;
+    
+    const {title, content } = req.body;
     const authorId = req.userData.userId;
 
     // Validate input
-    if (!title || !content) {
+    if (!title || !content || !req.file) {
         return res.status(422).json({ message: 'Invalid input, missing field' });
     }
+    
+    // Get the S3 URL of the uploaded image
+    const imageUrl = req.file.location; 
 
     // Create new post  
    let newPost;
     try{
          newPost = await prisma.post.create({
-            data:{ title, content, author : { connect: { id: parseInt(authorId) } } }
+            data:{ title, content, image: imageUrl, author : { connect: { id: parseInt(authorId) } } }
         });
 
     }catch(err){
@@ -113,36 +118,40 @@ const deletePost = async (req, res, next) => {
     console.log('Deleting a post');
     const postId = req.params.pid;
     const creatorId = req.userData.userId;
-
+    
     let post;
-    // Check if post exists
+    
     try{
+        // Check if post exists
         post = await prisma.post.findFirst({
             where: { id: parseInt(postId) }
         });
+
 
         // If no post found
         if(!post){
             const error = new HttpsError('Could not find post for the provided id.',404);
             return next(error);
         } 
-    }catch(err){
-        console.error(err);
-        const error = new HttpsError('Something went wrong, could not delete post.',500);
-        return next(error);
-    }
-    
-    // Check if the user is the owner of the post
-    if(post.authorId !== parseInt(creatorId)){
-        const error = new HttpsError('You are not the owner of this post.',403);
-        return next(error);
-    }
 
-    // Delete the post
-    try{
+        // Check if the user is the owner of the post
+        if(post.authorId !== parseInt(creatorId)){
+            const error = new HttpsError('You are not the owner of this post.',403);
+            return next(error);
+        }
+
+        console.log(post.image);
+
+        //Delete imageUrl from s3 bucket
+        if(post.image){
+            await deleteFile(post.image);
+        }
+
+        // Delete the post
         await prisma.post.delete({
             where: { id: parseInt(postId) }
         });
+
     }catch(err){
         console.error(err);
         const error = new HttpsError('Something went wrong, could not delete post.',500);
