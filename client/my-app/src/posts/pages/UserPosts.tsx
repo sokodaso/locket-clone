@@ -8,6 +8,7 @@ interface Post{
     id: number;
     title: string;
     content: string;
+    image: string;
 }
 
 function UserPosts() {
@@ -53,12 +54,12 @@ function UserPosts() {
             <Typography variant="h5" className="page-title">Posts</Typography>
             
             {!loading && loadedPosts.length === 0 && (
-                <Typography color="gray">No moments shared yet.</Typography>
+                <Typography color="gray">No hangs shared yet.</Typography>
             )}
 
             <Box sx={{display: 'flex',flexDirection: 'column',alignItems: 'center',gap:4, width:'100%'}}>
                 {loadedPosts.map(post => (
-                    <PostItem key={post.id} id={post.id} title={post.title} content={post.content} onUpdateRefresh={handleUpdateRefresh} onDeleteRefresh={handleDeleteRefresh} />
+                    <PostItem key={post.id} id={post.id} title={post.title} content={post.content} image={post.image} onUpdateRefresh={handleUpdateRefresh} onDeleteRefresh={handleDeleteRefresh} />
                 ))}
             </Box>
         </Box>

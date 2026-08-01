@@ -5,7 +5,7 @@ import DeleteDialog from "../../shared/components/DeleteDialog.tsx";
 import {Card, CardContent, Typography, Box} from "@mui/material";
 import './PostItem.css';
 
-function PostItem({id, title,content, onUpdateRefresh, onDeleteRefresh}: any){
+function PostItem({id, title,content, image, onUpdateRefresh, onDeleteRefresh}: any){
    const[isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
    const[isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -15,7 +15,8 @@ function PostItem({id, title,content, onUpdateRefresh, onDeleteRefresh}: any){
                 <Box className="kebab-container" sx={{position: 'absolute', right: '10px', zIndex: 10}}>
                     <Kebab onEdit={() => setIsUpdateDialogOpen(true)} onDelete={() => setIsDeleteDialogOpen(true)} />
                 </Box>
-                <Typography color="red">Image Placeholder</Typography>
+
+                <img src={image} alt="Post" className="post-image" />
             </Box>
             <CardContent className="post-text-content">
             <Typography variant ="h6" fontWeight="bold">

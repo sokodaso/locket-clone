@@ -57,8 +57,8 @@ function App() {
         <Route element={<AppBar />} >
           <Route path="/users/:userId" element={<User />} />
           <Route path="/users/:userId/posts" element={<UserPosts />} />
+          <Route path="/posts/new" element={<NewPost />} />
         </Route>
-        <Route path="/posts/new" element={<NewPost />} />
         <Route path="*" element={<CustomNavigate to={`/users/${authState.userId}`} />} />
       </Routes>
     );
