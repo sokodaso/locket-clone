@@ -140,7 +140,6 @@ const deletePost = async (req, res, next) => {
             return next(error);
         }
 
-        console.log(post.image);
 
         //Delete imageUrl from s3 bucket
         if(post.image){

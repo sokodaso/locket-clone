@@ -2,8 +2,6 @@ const { S3Client, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 //const {fromSSO} = require('@aws-sdk/credential-provider-sso');
 const multerS3 = require('multer-s3');
 const multer = require('multer');
-//const s3 = new S3Client({region: process.env.AWS_BUCKET_REGION , credentials: fromSSO({profile: 'locket-clone'})
-//});
 const s3 = new S3Client({region: process.env.AWS_BUCKET_REGION, credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
